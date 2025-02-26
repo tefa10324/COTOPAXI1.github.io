@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volcán Cotopaxi - Simulación Interactiva</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .volcano-container {
+            height: 70vh;
+            background: linear-gradient(to bottom, #2c3e50, #000);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mountain {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            background: #4a4a4a;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            transform: translateX(-50%);
+        }
+
+        .crater {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            width: 80px;
+            height: 40px;
+            background: #333;
+            border-radius: 50%;
+            transform: translateX(-50%);
+        }
+
+        .lava {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ff4500, #ff2200);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            animation: eruption 2s infinite;
+            filter: blur(10px);
+            z-index: 2;
+        }
+
+        .lava-flow {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            width: 300px;
+            height: 200px;
+            background: linear-gradient(to top, #ff3300 0%, #ff6600 100%);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            animation: lava-glow 3s infinite alternate;
+            filter: blur(20px);
+            opacity: 0.7;
+        }
+
+        .ash-cloud {
+            position: absolute;
+            width: 200%;
+            height: 400px;
+            background: radial-gradient(circle, rgba(50,50,50,0.8) 0%, rgba(0,0,0,0) 70%);
+            animation: ash-drift 15s linear infinite;
+            mix-blend-mode: multiply;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, #ff5500 0%, #ff0000 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particle-fall 3s linear forwards;
+        }
+
+        @keyframes eruption {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.5); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        @keyframes lava-glow {
+            0% { box-shadow: 0 0 100px 30px #ff4500; }
+            50% { box-shadow: 0 0 150px 50px #ff2200; }
+            100% { box-shadow: 0 0 100px 30px #ff4500; }
+        }
+
+        @keyframes ash-drift {
+            0% { transform: translateX(-50%) skewY(-10deg); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateX(50%) skewY(10deg); opacity: 0; }
+        }
+
+        @keyframes particle-fall {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .info-card {
+            background: rgba(0,0,0,0.5);
+            padding: 1.5rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid #ff4500;
+            transition: transform 0.3s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px #ff450044;
+        }
+
+        h1 {
+            position: relative;
+            z-index: 3;
+            font-size: 4em;
+            text-align: center;
+            padding-top: 20vh;
+            text-shadow: 0 0 20px #ff4500;
+            animation: title-glow 2s infinite alternate;
+        }
+
+        @keyframes title-glow {
+            from { text-shadow: 0 0 10px #ff4500; }
+            to { text-shadow: 0 0 30px #ff4500; }
+        }
+
+        .alert-badge {
+            background: #ff4500;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            animation: alert-pulse 1s infinite alternate;
+        }
+
+        @keyframes alert-pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <div class="volcano-container">
+        <h1>Volcán Cotopaxi</h1>
+        <div class="mountain"></div>
+        <div class="crater"></div>
+        <div class="lava"></div>
+        <div class="lava-flow"></div>
+        <div class="ash-cloud"></div>
+    </div>
+
+    <div class="grid-container">
+        <div class="info-card">
+            <h2>Datos Generales</h2>
+            <p>📍 Ubicación: Ecuador</p>
+            <p>⛰ Altura: 5,897 m</p>
+            <p>🔥 Tipo de volcán: Estratovolcán</p>
+            <p>🌋 Última erupción: 2015</p>
+        </div>
+
+        <div class="info-card">
+            <h2>Características Unicas</h2>
+            <p>🏔 Volcán activo</p>
+            <p>🌋 Forma cónica</p>
+            <p>🌱 Vegetación: Páramo y bosques</p>
+            <p>🌍 Ubicación geográfica: Andes centrales</p>
+        </div>
+
+        <div class="info-card">
+            <h2>Datos Geológicos</h2>
+            <p>🪨 Composición: Andesita y Basalto</p>
+            <p>⚒ Edad: Aproximadamente 500,000 años</p>
+            <p>🧲 Sistema de fallas: Falla Cotopaxi-Quinche</p>
+            <p>💥 Actividad sísmica: Frecuente</p>
+        </div>
+
+        <div class="info-card">
+            <h2>Historia Eruptiva</h2>
+            <p>⏳ Erupciones históricas: Varias desde 1534</p>
+            <p>🌋 Erupciones más importantes: 1744, 1803, 2015</p>
+            <p>🔥 Consecuencias: Destrucción parcial, evacuaciones masivas</p>
+        </div>
+
+        <div class="info-card">
+            <h2>Climatología</h2>
+            <p>🌡 Temperatura media: 0-10°C</p>
+            <p>🌧 Precipitación: Alta, especialmente en la temporada de lluvias</p>
+            <p>💨 Vientos: Fuertes en las laderas del volcán</p>
+            <p>🌤 Clima: Frío, con algunas zonas nevadas en la cima</p>
+        </div>
+    </div>
+
+    <script>
+        function createParticles() {
+            const container = document.querySelector('.volcano-container');
+            
+            // Crear partículas de ceniza
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.width = Math.random() * 10 + 5 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.animationDuration = Math.random() * 2 + 2 + 's';
+            container.appendChild(particle);
+
+            // Eliminar partícula después de la animación
+            setTimeout(() => particle.remove(), 3000);
+        }
+
+        // Erupción continua
+        setInterval(() => {
+            // Añadir múltiples partículas
+            for(let i = 0; i < 15; i++) {
+                setTimeout(createParticles, Math.random() * 500);
+            }
+            
+            // Efecto de sacudida
+            document.body.style.transform = `translate(${Math.random() * 5 - 2.5}px, ${Math.random() * 5 - 2.5}px)`;
+            setTimeout(() => document.body.style.transform = 'translate(0,0)', 100);
+            
+        }, 2000);
+
+        // Efecto de interacción con el mouse
+        document.addEventListener('mousemove', (e) => {
+            if(Math.random() > 0.95) {
+                const spark = document.createElement('div');
+                spark.className = 'particle';
+                spark.style.left = e.clientX + 'px';
+                spark.style.top = e.clientY + 'px';
+                spark.style.background = 'radial-gradient(circle, #ffffff 0%, #ff4500 100%)';
+                document.body.appendChild(spark);
+                setTimeout(() => spark.remove(), 1000);
+            }
+        });
+    </script>
+</body>
+</html>
+
+
